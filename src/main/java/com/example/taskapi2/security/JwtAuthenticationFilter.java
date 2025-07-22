@@ -1,10 +1,13 @@
 package com.example.taskapi2.security;
 
+import com.example.taskapi2.service.ResponseService;
 import com.example.taskapi2.util.JwtTokenUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +17,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -40,9 +45,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             } catch (Exception e) {
+
+                log.error("Error al validar el token JWT", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.getWriter().write("{\"error\": \"Invalid token\"}");
+                response.setContentType("application/json;charset=UTF-8");
+
+                String jsonError = new ObjectMapper().writeValueAsString(Map.of(
+                        "error", "Invalid token",
+                        "message", e.getMessage()
+                ));
+
+                response.getWriter().write(jsonError);
+                response.getWriter().flush();
                 return;
             }
         }

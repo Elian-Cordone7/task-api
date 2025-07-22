@@ -38,4 +38,8 @@ public class ResponseService {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    public ResponseEntity<ApiResponse<Void>> unauthorizedErrorResponse(String message) {
+        ApiResponse<Void> response = new ApiResponse<>("error", message, null);
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
 }

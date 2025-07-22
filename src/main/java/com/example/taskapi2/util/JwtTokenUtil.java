@@ -17,7 +17,6 @@ public class JwtTokenUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    // Método para generar el token
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)

@@ -18,8 +18,7 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private String role; // Puede ser "USER" o "ADMIN"
+    private String role;
     private Long createdAt;
-
 
 }
